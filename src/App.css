@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+:root {
+  --primary: #003aff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+#root {
+  font-family: "Roboto", sans-serif;
+  background-color: #efeeef;
+  display: flex;
+  flex-direction: column;
+}
+h1 {
+  font-weight: 500;
+}
+button {
+  cursor: pointer;
+}
+
+input,
+button {
+  height: 40px;
+  border-radius: 8px;
+  border: 0.1em solid rgb(194, 194, 194);
+  font-size: 1.2em;
+}
+.active {
+  background-color: var(--primary);
+  color: white;
+}
+.header {
+  width: 100%;
+  display: flex;
+
+  color: white;
+  height: 12vh;
+}
+.header button,
+input {
+  width: 30%;
+}
+.logo {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 15%;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 90%;
+  gap: 10px;
+}
+
+.navbar input {
+  width: 75%;
+  padding: 10px;
+  font-size: 15px;
+}
+
+.navbar .btn-add-patient {
+  color: white;
+  background-color: var(--primary);
+  width: 10%;
+  font-size: 1.2em;
+}
+.logo img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.side-bar {
+  width: 15%;
+  padding-left: 2%;
+  font-size: 1.2em;
+}
+.side-bar ul {
+  list-style: none;
+}
+
+.side-bar li {
+  padding-block: 17px;
+  padding-left: 25px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.side-bar li:hover {
+  background-color: #dcdcdc;
+}
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+  flex: 1;
+}
+.btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+}
+.btns input,
+.btns button {
+  width: 15%;
+}
+.main-content {
+  display: flex;
+}
+.add-medicine {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgb(194, 194, 194);
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  width: 50%;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.add-medicine input {
+  margin: 10px;
+}
+.add-medicine label {
+  font-weight: 500;
+}
+.intake-time {
+  display: flex;
+  align-items: center;
+}
+.add-intake-time {
+  width: 15%;
+  margin: 3px;
+}
+.control-btns {
+  display: flex;
+  justify-content: space-around;
+}
+.control-btns button {
+  width: 47%;
+}
+/* .confirm-btn {
+  background-color: #003aff;
+  color: white;
+} */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
