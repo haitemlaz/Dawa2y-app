@@ -9,12 +9,7 @@ function App() {
 
   const isOpen = true;
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-        setisAddMedOpen(false);
-      }}
-    >
+    <>
       <Header />
       <div className="main-content">
         {isOpen ? <SideBar /> : null}
@@ -24,7 +19,7 @@ function App() {
           setisAddMedOpen={setisAddMedOpen}
         />
       </div>
-    </div>
+    </>
   );
 }
 

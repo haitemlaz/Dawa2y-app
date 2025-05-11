@@ -1,14 +1,14 @@
 function AddMedicine() {
   return (
-    <form className="add-medicine">
+    <form className="add-medicine" onClick={(e) => e.stopPropagation()}>
       <h1>Add medicine</h1>
-      <label for="med-name">Name</label>
+      <label htmlFor="med-name">Name</label>
       <input type="text" id="med-name"></input>
-      <label for="dose">Dose</label>
+      <label htmlFor="dose">Dose</label>
       <input type="text" id="dose"></input>
-      <label for="Quantity">Quantity</label>
+      <label htmlFor="Quantity">Quantity</label>
       <input type="number" id="Quantity"></input>
-      <label for="repititionAfter">Consum every </label>
+      <label htmlFor="repititionAfter">Consum every </label>
       <div>
         <input
           type="number"
@@ -21,20 +21,11 @@ function AddMedicine() {
       <label>Schedule</label>
       <div className="schedule">
         <div className="intake-time">
-          <label for="">Intake time</label>{" "}
+          <label htmlFor="intake-time">Intake time</label>{" "}
           <input id="intake-time" type="time"></input>
           <textarea placeholder="Notes ..." rows={2} cols={50}></textarea>
         </div>
-        <div className="intake-time">
-          <label for="">Intake time</label>{" "}
-          <input id="intake-time" type="time"></input>
-          <textarea placeholder="Notes ..." rows={2} cols={50}></textarea>
-        </div>
-        <div className="intake-time">
-          <label for="">Intake time</label>{" "}
-          <input id="intake-time" type="time"></input>
-          <textarea placeholder="Notes ..." rows={2} cols={50}></textarea>
-        </div>
+
         <button className="add-intake-time active" type="button">
           Add
         </button>

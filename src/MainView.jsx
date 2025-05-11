@@ -19,7 +19,12 @@ function MainView({ isAddMedOpen, setisAddMedOpen }) {
           Add Medicine
         </button>
       </div>
-      {isAddMedOpen && <AddMedicine />}
+      {isAddMedOpen && (
+        <>
+          <div className="overlay" onClick={() => setisAddMedOpen(false)}></div>
+          <AddMedicine />
+        </>
+      )}
     </div>
   );
 }
