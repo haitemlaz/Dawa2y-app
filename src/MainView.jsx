@@ -6,7 +6,7 @@ function MainView({ isAddMedOpen, setisAddMedOpen }) {
   return (
     <div className="main">
       <div className="btns">
-        <input type="number" placeholder="Treatment duration"></input>
+        <input type="number" placeholder=" Treatment duration"></input>
         <input type="date"></input>
 
         <button
@@ -22,7 +22,7 @@ function MainView({ isAddMedOpen, setisAddMedOpen }) {
       {isAddMedOpen && (
         <>
           <div className="overlay" onClick={() => setisAddMedOpen(false)}></div>
-          <AddMedicine />
+          <AddMedicine setisAddMedOpen={setisAddMedOpen}/>
         </>
       )}
     </div>

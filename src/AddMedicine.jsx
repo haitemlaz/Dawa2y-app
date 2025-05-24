@@ -1,6 +1,9 @@
-function AddMedicine() {
+import { useState } from "react";
+
+function AddMedicine({setisAddMedOpen}) {
+  const [scheduleSize,setScheduleSize]=useState(1)
   return (
-    <form className="add-medicine" onClick={(e) => e.stopPropagation()}>
+    <form className="add-medicine pop-up" onClick={(e) => e.stopPropagation()}>
       <h1>Add medicine</h1>
       <label htmlFor="med-name">Name</label>
       <input type="text" id="med-name"></input>
@@ -20,21 +23,25 @@ function AddMedicine() {
       </div>
       <label>Schedule</label>
       <div className="schedule">
-        <div className="intake-time">
-          <label htmlFor="intake-time">Intake time</label>{" "}
-          <input id="intake-time" type="time"></input>
-          <textarea placeholder="Notes ..." rows={2} cols={50}></textarea>
-        </div>
+        {Array.from({ length: scheduleSize }, (_, i) => (
+          <div className="intake-time" key={i}>
+            <label htmlFor={`intake-time-${i}`}>Intake time</label>{" "}
+            <input id={`intake-time-${i}`} type="time"></input>
+            <textarea placeholder="Notes ..." rows={2} cols={50}></textarea>
+          </div>
+        ))}
 
-        <button className="add-intake-time active" type="button">
+       
+      </div>
+       <button className="add-intake-time active" type="button" onClick={()=>{console.log(scheduleSize)
+          setScheduleSize(prev=>prev+1)}}>
           Add
         </button>
-      </div>
       <div className="control-btns">
         <button className="confirm-btn active" type="button">
           Confirm
         </button>
-        <button type="button">Cancel</button>
+        <button type="button" onClick={() => setisAddMedOpen(false)}>Cancel</button>
       </div>
     </form>
   );
