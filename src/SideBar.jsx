@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import logo from "./assets/logo.png";
 import axios from 'axios';
 function SideBar() {
   const [isAddFile,setAddFile]=useState(false)
@@ -30,6 +31,9 @@ useEffect(()=>{async function handleUpload()    {
   
   return (
     <div className="side-bar">
+       <div className="logo">
+        <img src={logo} alt="Logo" />
+      </div>
       <ul>
         <li>Diseases</li>
         <li>Prescription History</li>
