@@ -1,10 +1,10 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 const initialState = {
   medName: "",
   dose: "",
   quantity: 0,
   repititionAfter: 1,
-  schedule: [],
+  tasks: [{ hour: "", note: "" }],
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -28,24 +28,35 @@ function reducer(state, action) {
         ...state,
         repititionAfter: action.payload,
       };
+    case "add task":
+      return {
+        ...state,
+        tasks: [...state.tasks, { hour: "", note: "" }],
+      };
     case "time":
       return {
         ...state,
-        schedule:
-          state.schedule.length === action.payload.index + 1
-            ? [...state.schedule, { hour: action.payload.time }]
-            : state.schedule.map((item, i) =>
-                i === action.payload.index
-                  ? { ...item, hour: action.payload.timme }
-                  : item
-              ),
+        tasks: state.tasks.map((item, index) =>
+          index === action.payload.index
+            ? { ...item, hour: action.payload.time }
+            : item
+        ),
+      };
+    case "note":
+      return {
+        ...state,
+        tasks: state.tasks.map((item, index) =>
+          index === action.payload.index
+            ? { ...item, note: action.payload.note }
+            : item
+        ),
       };
   }
 }
-function AddMedicine({ setisAddMedOpen }) {
-  const [scheduleSize, setScheduleSize] = useState(1);
-  const [{ medName, dose, quantity, repititionAfter, schedule }, dispatch] =
-    useReducer(reducer, initialState);
+function AddMedicine({ setisAddMedOpen, setMedicines }) {
+  // const [tasksSize, settasksSize] = useState(1);
+  const [medicine, dispatch] = useReducer(reducer, initialState);
+  const { medName, dose, quantity, repititionAfter, tasks } = medicine;
   return (
     <form className="add-medicine pop-up" onClick={(e) => e.stopPropagation()}>
       <h1>Add medicine</h1>
@@ -89,40 +100,55 @@ function AddMedicine({ setisAddMedOpen }) {
         ></input>
         days
       </div>
-      <label>Schedule</label>
-      <div className="schedule">
-        {Array.from(
-          { length: schedule.length === 0 ? 1 : schedule.length },
-          (_, i) => (
-            <div className="intake-time" key={i}>
-              <label htmlFor={`intake-time-${i}`}>Intake time</label>
-              <input
-                id={`intake-time-${i}`}
-                type="time"
-                onChange={(e) =>
-                  dispatch({
-                    type: "time",
-                    payload: { time: e.target.value, index: i },
-                  })
-                }
-              ></input>
-              <textarea placeholder="Notes ..." rows={2} cols={50}></textarea>
-            </div>
-          )
-        )}
+      <label>tasks</label>
+      <div className="tasks">
+        {Array.from({ length: tasks.length }, (_, i) => (
+          <div className="intake-time" key={i}>
+            <label htmlFor={`intake-time-${i}`}>Intake time</label>
+            <input
+              id={`intake-time-${i}`}
+              type="time"
+              onChange={(e) =>
+                dispatch({
+                  type: "time",
+                  payload: { time: e.target.value, index: i },
+                })
+              }
+              value={tasks[i].hour}
+            ></input>
+            <textarea
+              placeholder="Notes ..."
+              rows={2}
+              cols={50}
+              onChange={(e) =>
+                dispatch({
+                  type: "note",
+                  payload: { note: e.target.value, index: i },
+                })
+              }
+              value={tasks[i].note}
+            ></textarea>
+          </div>
+        ))}
       </div>
       <button
         className="add-intake-time active"
         type="button"
         onClick={() => {
-          console.log(scheduleSize);
-          setScheduleSize((prev) => prev + 1);
+          dispatch({ type: "add task", payload: "" });
         }}
       >
         Add
       </button>
       <div className="control-btns">
-        <button className="confirm-btn active" type="button">
+        <button
+          className="confirm-btn active"
+          type="button"
+          onClick={() => {
+            setMedicines((list) => [...list, medicine]);
+            setisAddMedOpen(false);
+          }}
+        >
           Confirm
         </button>
         <button type="button" onClick={() => setisAddMedOpen(false)}>

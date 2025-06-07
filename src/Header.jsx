@@ -55,10 +55,15 @@ function Header({ setPatient }) {
       />
       <button className="btn-add-patient">Add Patient</button>
       {searchQuery && (
-        <div className="Searchresults">
+        <div className="SearchResults">
           {results.length ? (
             results.map((e, i) => (
-              <PatientSuggestion patient={e} key={i} setPatient={setPatient} />
+              <PatientSuggestion
+                patient={e}
+                key={i}
+                setPatient={setPatient}
+                setsearchQuery={setsearchQuery}
+              />
             ))
           ) : (
             <div> no results</div>
@@ -71,9 +76,15 @@ function Header({ setPatient }) {
     </header>
   );
 }
-function PatientSuggestion({ patient, setPatient }) {
+function PatientSuggestion({ patient, setPatient, setsearchQuery }) {
   return (
-    <div className="suggestion" onClick={() => setPatient(patient)}>
+    <div
+      className="suggestion"
+      onClick={() => {
+        setPatient(patient);
+        setsearchQuery("");
+      }}
+    >
       {patient.name}
     </div>
   );

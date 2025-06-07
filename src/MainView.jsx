@@ -1,66 +1,51 @@
-import AddMedicine from "./AddMedicine";
+import { useState } from "react";
 import Header from "./Header";
-import SideBar from "./SideBar";
-// import { database } from "./firebase";
+import PatientProfile from "./PatientProfile";
+import Prescription from "./Prescription";
+import { database } from "./firebase";
+import { ref, get, set } from "firebase/database";
 
-function MainView({ isAddMedOpen, setisAddMedOpen, setPatient, patient }) {
+function MainView(
+  {
+    // isAddMedOpen,
+    // setisAddMedOpen,
+    // setPatient,
+    // patient,
+    // handlePrescription,
+  }
+) {
+  const [patient, setPatient] = useState({});
+  const [prescription, setPrescription] = useState({});
+  async function handlePrescription(prescription) {
+    const recipesRef = ref(database, `patients/${patient.id}/recipes`);
+    try {
+      const snapshot = await get(recipesRef);
+      if (snapshot.exists()) {
+        const recipes = await snapshot.val();
+        const recipesCount = Object.keys(recipes).length;
+
+        console.log("recipes ", recipes);
+        const newRecipeRef = ref(
+          database,
+          `patients/${patient.id}/recipes/${recipesCount}`
+        );
+        set(newRecipeRef, {
+          ...prescription,
+          drName: doctor.name,
+        });
+        setPrescription({ ...prescription, drName: doctor.name });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
   return (
     <>
-      {" "}
       <Header setPatient={setPatient} />
       <div className="main-content">
-        <div className=" pop-up profile">
-          {patient && patient.name ? (
-            <>
-              <h2>User Information</h2>
-              <p>
-                <strong>Name:</strong>
-                {patient.name}
-              </p>
-              <p>
-                <strong>Age:</strong> {patient.age}
-              </p>
-              <p>
-                <strong>Gender:</strong> {patient.sex}
-              </p>
-              <p>
-                <strong>Phone:</strong> {patient.phone}
-              </p>
-              <p>
-                <strong>Email:</strong> {patient.email}
-              </p>
-              <p>
-                <strong>Insurance:</strong>{" "}
-                {patient.insurance === 0 ? "Unavailable" : "Available"}
-              </p>
-            </>
-          ) : (
-            "No Patient is Selected"
-          )}
-        </div>
-        <div className="prescription">
-          <div className="btns">
-            <input type="number" placeholder=" Treatment duration"></input>
-            <input type="date"></input>
-
-            <button
-              className="active add-"
-              onClick={(e) => {
-                e.stopPropagation();
-                setisAddMedOpen(true);
-              }}
-            >
-              Add Medicine
-            </button>
-          </div>
-        </div>
+        <PatientProfile patient={patient} />
+        <Prescription handlePrescription={handlePrescription} />
       </div>
-      {isAddMedOpen && (
-        <>
-          <div className="overlay" onClick={() => setisAddMedOpen(false)}></div>
-          <AddMedicine setisAddMedOpen={setisAddMedOpen} />
-        </>
-      )}
     </>
   );
 }

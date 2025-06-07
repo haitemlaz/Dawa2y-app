@@ -7,12 +7,12 @@ import StartMenu from "./StartMenu";
 import { useEffect } from "react";
 import firebaseApp from "./firebase";
 import Login from "./login";
-
+import { auth, database } from "./firebase";
+import { ref, get } from "firebase/database";
 function App() {
-  const [page, SetPage] = useState("login");
-  const [patient, setPatient] = useState({});
+  const [page, SetPage] = useState("");
+  const [doctor, setDoctor] = useState(null);
 
-  const [isAddMedOpen, setisAddMedOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
@@ -23,25 +23,51 @@ function App() {
       console.error("❌ Firebase connection failed:", error);
     }
   }, []);
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        console.log("user", user);
 
+        // User is signed in, fetch doctor data
+        const doctorsRef = ref(database, "doctors");
+        const snapshot = await get(doctorsRef);
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const doctorData = Object.values(data).find(
+            (doc) => doc.email === user.email
+          );
+          console.log("doctorData", doctorData);
+          setDoctor(doctorData);
+          SetPage("patient");
+        }
+      } else {
+        SetPage("login");
+        setDoctor(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
   return (
     <>
       {}
-      {page === "patient" && (
+      {!doctor ? (
+        <Login SetPage={SetPage} setDoctor={setDoctor} />
+      ) : (
         <div className="workspace">
-          {isOpen && <SideBar />}
+          {isOpen && <SideBar doctor={doctor} />}
           <div className="main">
             {page === "start" && <StartMenu SetPage={SetPage} />}
             <MainView
-              isAddMedOpen={isAddMedOpen}
-              setisAddMedOpen={setisAddMedOpen}
-              setPatient={setPatient}
-              patient={patient}
+            // handlePrescription={handlePrescription}
+            // // isAddMedOpen={isAddMedOpen}
+            // // setisAddMedOpen={setisAddMedOpen}
+            // setPatient={setPatient}
+            // patient={patient}
             />
           </div>
         </div>
       )}
-      {page === "login" && <Login SetPage={SetPage} />}
+      {/* {!doctor && <Login SetPage={SetPage} setDoctor={setDoctor} />} */}
     </>
   );
 }
