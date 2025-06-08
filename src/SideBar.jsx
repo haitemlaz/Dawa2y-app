@@ -5,7 +5,7 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
 
-function SideBar({ doctor }) {
+function SideBar({ doctor, setIsAppointment }) {
   const [isAddFile, setAddFile] = useState(false);
   //start gpt code
 
@@ -56,9 +56,8 @@ function SideBar({ doctor }) {
         <div className="speciality">{doctor.speciality}</div>
       </div>
       <ul>
-        <li>Diseases</li>
-        <li>Prescription History</li>
-        <li>Profile</li>
+        <li onClick={() => setIsAppointment(false)}>Make Prescription</li>
+        <li onClick={() => setIsAppointment(true)}>Appointments</li>
         <li onClick={() => setAddFile((prev) => !prev)}>Add File</li>
         {isAddFile && (
           <div className="pop-up add-file">

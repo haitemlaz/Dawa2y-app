@@ -75,6 +75,10 @@ function PatientProfile({ patient }) {
             <strong>Insurance:</strong>
             {insurence === 0 ? "Unavailable" : "Available"}
           </p>
+          <p>
+            <strong>Files:</strong> BloodAnalytics.pdf,
+            <strong> Add</strong>
+          </p>
         </>
       ) : (
         "No Patient is Selected"

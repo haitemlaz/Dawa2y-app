@@ -9,11 +9,14 @@ import firebaseApp from "./firebase";
 import Login from "./login";
 import { auth, database } from "./firebase";
 import { ref, get } from "firebase/database";
+import Appointments from "./Appointments";
 function App() {
+  const [isAppointment, setIsAppointment] = useState(false);
+
   const [page, SetPage] = useState("");
   const [doctor, setDoctor] = useState(null);
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isSidebar, setIsSidebar] = useState(true);
 
   useEffect(() => {
     try {
@@ -54,15 +57,24 @@ function App() {
         <Login SetPage={SetPage} setDoctor={setDoctor} />
       ) : (
         <div className="workspace">
-          {isOpen && <SideBar doctor={doctor} />}
+          {isSidebar && (
+            <SideBar
+              doctor={doctor}
+              setIsAppointment={setIsAppointment}
+              className={isSidebar ? "side-bar" : "side-bar closed"}
+            />
+          )}
           <div className="main">
             {page === "start" && <StartMenu SetPage={SetPage} />}
             <MainView
-            // handlePrescription={handlePrescription}
-            // // isAddMedOpen={isAddMedOpen}
-            // // setisAddMedOpen={setisAddMedOpen}
-            // setPatient={setPatient}
-            // patient={patient}
+              isAppointment={isAppointment}
+              doctor={doctor}
+              setIsSidebar={setIsSidebar}
+              // handlePrescription={handlePrescription}
+              // // isAddMedOpen={isAddMedOpen}
+              // // setisAddMedOpen={setisAddMedOpen}
+              // setPatient={setPatient}
+              // patient={patient}
             />
           </div>
         </div>

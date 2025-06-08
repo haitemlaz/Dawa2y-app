@@ -4,16 +4,9 @@ import PatientProfile from "./PatientProfile";
 import Prescription from "./Prescription";
 import { database } from "./firebase";
 import { ref, get, set } from "firebase/database";
+import Appointments from "./Appointments";
 
-function MainView(
-  {
-    // isAddMedOpen,
-    // setisAddMedOpen,
-    // setPatient,
-    // patient,
-    // handlePrescription,
-  }
-) {
+function MainView({ doctor, isAppointment, setIsAppointment, setIsSidebar }) {
   const [patient, setPatient] = useState({});
   const [prescription, setPrescription] = useState({});
   async function handlePrescription(prescription) {
@@ -41,10 +34,16 @@ function MainView(
   }
   return (
     <>
-      <Header setPatient={setPatient} />
+      <Header setPatient={setPatient} setIsSidebar={setIsSidebar} />
       <div className="main-content">
-        <PatientProfile patient={patient} />
-        <Prescription handlePrescription={handlePrescription} />
+        {isAppointment ? (
+          <Appointments />
+        ) : (
+          <>
+            <PatientProfile patient={patient} />
+            <Prescription handlePrescription={handlePrescription} />
+          </>
+        )}
       </div>
     </>
   );

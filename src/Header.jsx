@@ -10,7 +10,7 @@ import {
   equalTo,
   get,
 } from "firebase/database";
-function Header({ setPatient }) {
+function Header({ setPatient, setIsSidebar }) {
   const [searchQuery, setsearchQuery] = useState("");
   const [results, setResults] = useState("");
   console.log(results);
@@ -46,6 +46,12 @@ function Header({ setPatient }) {
   }, [searchQuery]);
   return (
     <header className="header">
+      <img
+        className="header-doctor-img"
+        src={""}
+        alt="Doctor"
+        onClick={() => setIsSidebar((state) => !state)}
+      />
       <input
         type="text"
         placeholder="Search for a patient ..."
