@@ -40,7 +40,7 @@ function MainView({ doctor, isAppointment, setIsAppointment, setIsSidebar }) {
           <Appointments />
         ) : (
           <>
-            <PatientProfile patient={patient} />
+            <PatientProfile patient={patient} setPatient={setPatient} />
             <Prescription handlePrescription={handlePrescription} />
           </>
         )}

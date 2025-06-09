@@ -2,7 +2,7 @@ import { useState } from "react";
 import { database } from "./firebase";
 import { ref, get, set } from "firebase/database";
 
-function AddFile({ patient }) {
+function AddFile({ patient, setIsAddFile, setPatient }) {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [url, setUrl] = useState("");
@@ -55,8 +55,16 @@ function AddFile({ patient }) {
         console.error("Error saving file info to Firebase:", error);
       }
       // --------------------------------------------------------
+      setTimeout(async () => {
+        const patientRef = ref(database, `patients/${patient.id}`);
+        const snapshot = await get(patientRef);
+        if (snapshot.exists()) {
+          setPatient(snapshot.val());
+        }
+        setIsAddFile(false);
+      }, 700);
 
-      alert("Upload successful!");
+      //   alert("Upload successful!");
       console.log("file url", json);
     } catch (err) {
       alert("Upload failed!", err);
@@ -67,23 +75,26 @@ function AddFile({ patient }) {
 
   return (
     <div className="pop-up add-file">
-      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-      <input
-        type="text"
-        placeholder="File name (optional)"
-        value={fileName}
-        onChange={(e) => setFileName(e.target.value)}
-        style={{ margin: "10px 0" }}
-      />
-      <button type="button" onClick={handleUpload} disabled={uploading}>
-        {uploading ? "Uploading..." : "Submit"}
-      </button>
-      {url && (
-        <div>
-          <a href={url} target="_blank" rel="noopener noreferrer">
-            View Uploaded File
-          </a>
+      {url ? (
+        <div
+          style={{ color: "green", fontWeight: "bold", textAlign: "center" }}
+        >
+          The file submitted successfully!
         </div>
+      ) : (
+        <>
+          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+          <input
+            type="text"
+            placeholder="File name (optional)"
+            value={fileName}
+            onChange={(e) => setFileName(e.target.value)}
+            style={{ margin: "10px 0" }}
+          />
+          <button type="button" onClick={handleUpload} disabled={uploading}>
+            {uploading ? "Uploading..." : "Submit"}
+          </button>
+        </>
       )}
     </div>
   );

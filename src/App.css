@@ -275,6 +275,27 @@ button {
   opacity: 1;
 }
 
+/* Add button for files section */
+.add-file-btn {
+  background: none;
+  border: none;
+  color: #49b4e5;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.15s;
+}
+
+.add-file-btn:hover {
+  color: #2179a5;
+  text-decoration: underline;
+}
+
+
+
+/*////////////////    /////// Prescription //////////////      ////////////**/
+
 .prescription {
   display: flex;
   flex-direction: column;
@@ -297,6 +318,13 @@ button {
 .btns input,
 .btns button {
   width: 15%;
+}
+
+.center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
 }
 
 

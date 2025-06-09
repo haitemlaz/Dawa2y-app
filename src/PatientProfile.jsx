@@ -4,7 +4,7 @@ import AddFile from "./AddFile";
 import aiIcon from "./assets/aiIcon.png";
 import AnalyseFile from "./AnalyseFile";
 
-function PatientProfile({ patient }) {
+function PatientProfile({ patient, setPatient }) {
   const {
     name,
     "birth date": birthDate,
@@ -83,33 +83,49 @@ function PatientProfile({ patient }) {
               {insurence === 0 ? "Unavailable" : "Available"}
             </p>
             <div>
-              <p>
-                <strong>Files:</strong>{" "}
-                {files
-                  ? files.map((file, idx) => (
-                      <span className="patient-file" key={idx}>
-                        {file.fileName}
-                        <img
-                          src={aiIcon}
-                          alt="AI Analysis"
-                          className="ai-icon"
-                          title="Analyse with AI"
-                          onClick={() => setFileURL(file.fileURL)}
-                        />
-                        {idx < files.length - 1 ? ", " : ""}
-                      </span>
-                    ))
-                  : ""}
-                <strong onClick={() => setIsAddFile(true)}> Add</strong>{" "}
-              </p>
-              {isAddFile ? <AddFile patient={patient} /> : ""}
+              <strong>Files:</strong>{" "}
+              {files
+                ? files.map((file, idx) => (
+                    <span className="patient-file" key={idx}>
+                      {file.fileName}
+                      <img
+                        src={aiIcon}
+                        alt="AI Analysis"
+                        className="ai-icon"
+                        title="generate report with AI"
+                        onClick={() => setFileURL(file.fileURL)}
+                      />
+                      {idx < files.length - 1 ? ", " : ""}
+                    </span>
+                  ))
+                : "none"}
+              <strong
+                className="add-file-btn"
+                onClick={() => setIsAddFile(true)}
+              >
+                + Add
+              </strong>
+              {isAddFile ? (
+                <AddFile
+                  patient={patient}
+                  setIsAddFile={setIsAddFile}
+                  setPatient={setPatient}
+                />
+              ) : (
+                ""
+              )}
             </div>
           </>
         ) : (
           "No Patient is Selected"
         )}
       </div>
-      {fileURL && <AnalyseFile fileURL={fileURL} />}
+      {fileURL && (
+        <>
+          <AnalyseFile fileURL={fileURL} />
+          <div className="overlay" onClick={() => setFileURL(null)}></div>
+        </>
+      )}
     </>
   );
 }
