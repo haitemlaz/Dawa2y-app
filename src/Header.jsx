@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
 import { database } from "./firebase";
+import { ref as dbRef, get } from "firebase/database";
 import {
-  ref,
-  query,
-  orderByChild,
-  startAt,
-  endAt,
-  onValue,
-  equalTo,
-  get,
-} from "firebase/database";
-function Header({ setPatient, setIsSidebar }) {
+  getStorage,
+  ref as storageRef,
+  getDownloadURL,
+} from "firebase/storage";
+
+function Header({ setPatient, setIsSidebar, doctorPic }) {
   const [searchQuery, setsearchQuery] = useState("");
   const [results, setResults] = useState("");
+  const [docImgUrl, setDocImgUrl] = useState();
+
+  useEffect(() => {
+    const storage = getStorage();
+    const imgRef = storageRef(storage, `drsImgs/${doctorPic}`);
+    getDownloadURL(imgRef).then((url) => setDocImgUrl(url));
+  }, [doctorPic]);
   console.log(results);
   useEffect(() => {
     async function search() {
@@ -21,7 +25,7 @@ function Header({ setPatient, setIsSidebar }) {
         return;
       }
 
-      const patientsRef = ref(database, "patients"); // path to your users
+      const patientsRef = dbRef(database, "patients"); // path to your users
       // const q = query(patientsRef, orderByChild("name"), equalTo(searchQuery));
 
       // Make sure 'get' is imported from 'firebase/database'
@@ -48,7 +52,7 @@ function Header({ setPatient, setIsSidebar }) {
     <header className="header">
       <img
         className="header-doctor-img"
-        src={""}
+        src={docImgUrl}
         alt="Doctor"
         onClick={() => setIsSidebar((state) => !state)}
       />

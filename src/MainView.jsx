@@ -34,7 +34,11 @@ function MainView({ doctor, isAppointment, setIsAppointment, setIsSidebar }) {
   }
   return (
     <>
-      <Header setPatient={setPatient} setIsSidebar={setIsSidebar} />
+      <Header
+        setPatient={setPatient}
+        setIsSidebar={setIsSidebar}
+        doctorPic={doctor.pic}
+      />
       <div className="main-content">
         {isAppointment ? (
           <Appointments />

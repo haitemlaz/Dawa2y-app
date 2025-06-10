@@ -12,8 +12,8 @@ function SideBar({ doctor, setIsAppointment }) {
 
   const [file, setFile] = useState(null);
   // const [response, setResponse] = useState(null);
-  const [docImgUrl, setDocImgUrl] = useState("");
   const [isAnalyse, setIsAnalyse] = useState(false);
+  const [docImgUrl, setDocImgUrl] = useState("");
 
   useEffect(() => {
     const storage = getStorage();
