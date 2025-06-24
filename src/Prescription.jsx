@@ -2,7 +2,7 @@ import { useState } from "react";
 import AddMedicine from "./AddMedicine";
 // import { generatePDF } from "./generatePDF";
 
-function Prescription({ handlePrescription, handlePrint }) {
+function Prescription({ handlePrescription, handlePrint, prescription }) {
   const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
   const [date, setDate] = useState(today);
   const [duration, setDuration] = useState("");
@@ -66,12 +66,13 @@ function Prescription({ handlePrescription, handlePrint }) {
         <button
           className="active"
           onClick={() => {
-            handlePrint();
-            handlePrescription({
+            const prescriptionData = {
               date: formatDate(date),
               treatmentDuration: duration,
               medicines: medicines,
-            });
+            };
+            handlePrint(prescriptionData);
+            handlePrescription(prescriptionData);
           }}
         >
           Save

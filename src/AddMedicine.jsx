@@ -1,4 +1,6 @@
-import { useReducer } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
+import { database } from "./firebase";
+import { ref as dbRef, get } from "firebase/database";
 const initialState = {
   medName: "",
   dose: "",
@@ -57,16 +59,77 @@ function AddMedicine({ setisAddMedOpen, setMedicines }) {
   // const [tasksSize, settasksSize] = useState(1);
   const [medicine, dispatch] = useReducer(reducer, initialState);
   const { medName, dose, quantity, repititionAfter, tasks } = medicine;
+
+  // Autocomplete state
+  const [recommendations, setRecommendations] = useState([]);
+  const [showRecommendations, setShowRecommendations] = useState(false);
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if (!medName.trim()) {
+      setRecommendations([]);
+      setShowRecommendations(false);
+      return;
+    }
+    const fetchMeds = async () => {
+      const medsRef = dbRef(database, "medecines");
+      const snapshot = await get(medsRef);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const filtered = Object.keys(data).filter((key) =>
+          key.toLowerCase().startsWith(medName.toLowerCase())
+        );
+        setRecommendations(filtered);
+        setShowRecommendations(filtered.length > 0);
+      } else {
+        setRecommendations([]);
+        setShowRecommendations(false);
+      }
+    };
+    fetchMeds();
+  }, [medName]);
+
+  // Hide recommendations when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (inputRef.current && !inputRef.current.contains(e.target)) {
+        setShowRecommendations(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   return (
     <form className="add-medicine pop-up" onClick={(e) => e.stopPropagation()}>
       <h1>Add medicine</h1>
       <label htmlFor="med-name">Name</label>
-      <input
-        type="text"
-        id="med-name"
-        onChange={(e) => dispatch({ type: "medName", payload: e.target.value })}
-        value={medName}
-      ></input>
+      <div className="medicine-autocomplete-wrapper" ref={inputRef}>
+        <input
+          type="text"
+          id="med-name"
+          onChange={(e) =>
+            dispatch({ type: "medName", payload: e.target.value })
+          }
+          value={medName}
+          onFocus={() => setShowRecommendations(recommendations.length > 0)}
+          autoComplete="off"
+        />
+        {showRecommendations && (
+          <ul className="medicine-autocomplete-list">
+            {recommendations.map((name) => (
+              <li
+                key={name}
+                onClick={() => {
+                  dispatch({ type: "medName", payload: name });
+                  setShowRecommendations(false);
+                }}
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
       <label htmlFor="dose">Dose</label>
       <input
         type="text"

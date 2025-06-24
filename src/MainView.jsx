@@ -54,7 +54,7 @@ function MainView({ doctor, isAppointment, setIsAppointment, setIsSidebar }) {
 
     return age;
   };
-  const handlePrint = async () => {
+  const handlePrint = async (prescription) => {
     const recipesRef = ref(database, `patients/${patient.id}/recipes`);
 
     const snapshot = await get(recipesRef);
@@ -66,7 +66,7 @@ function MainView({ doctor, isAppointment, setIsAppointment, setIsSidebar }) {
     generatePDF({
       doctor,
       patient,
-      duration: prescription.duration,
+      treatmentDuration: prescription.treatmentDuration,
       medicines: prescription.medicines,
       prescriptionId: `${patient.id}-${recipesCount}`,
       calculateAge,
@@ -89,6 +89,7 @@ function MainView({ doctor, isAppointment, setIsAppointment, setIsSidebar }) {
             <Prescription
               handlePrescription={handlePrescription}
               handlePrint={handlePrint}
+              prescription={prescription}
             />
           </>
         )}

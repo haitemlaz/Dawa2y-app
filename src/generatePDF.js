@@ -9,7 +9,7 @@ pdfMake.vfs = pdfFonts.vfs;
 export const generatePDF = async ({
   doctor,
   patient,
-  duration,
+  treatmentDuration,
   medicines,
   prescriptionId,
   calculateAge,
@@ -92,7 +92,7 @@ export const generatePDF = async ({
                 style: "patientInfo",
               },
               {
-                text: `Treatment Duration: ${duration}`,
+                text: `Treatment Duration: ${treatmentDuration}`,
                 style: "patientInfo",
               },
             ],
