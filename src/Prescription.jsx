@@ -1,7 +1,8 @@
 import { useState } from "react";
 import AddMedicine from "./AddMedicine";
+// import { generatePDF } from "./generatePDF";
 
-function Prescription({ handlePrescription }) {
+function Prescription({ handlePrescription, handlePrint }) {
   const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
   const [date, setDate] = useState(today);
   const [duration, setDuration] = useState("");
@@ -12,6 +13,22 @@ function Prescription({ handlePrescription }) {
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
   }
+  // const calculateAge = (birthDate) => {
+  //   const dob = new Date(birthDate);
+  //   const diff = Date.now() - dob.getTime();
+  //   const age = new Date(diff);
+  //   return Math.abs(age.getUTCFullYear() - 1970);
+  // };
+  // const handlePrint = () => {
+  //   generatePDF({
+  //     doctor,
+  //     patient,
+  //     duration,
+  //     medList,
+  //     prescriptionId,
+  //     calculateAge,
+  //   });
+  // };
   return (
     <>
       <div className="prescription">
@@ -20,7 +37,7 @@ function Prescription({ handlePrescription }) {
             type="number"
             placeholder=" Treatment duration"
             onChange={(e) => {
-              setDuration(e.target.value);
+              setDuration(Number(e.target.value));
             }}
             value={duration}
           ></input>
@@ -48,13 +65,14 @@ function Prescription({ handlePrescription }) {
         </div>
         <button
           className="active"
-          onClick={() =>
+          onClick={() => {
+            handlePrint();
             handlePrescription({
               date: formatDate(date),
               treatmentDuration: duration,
               medicines: medicines,
-            })
-          }
+            });
+          }}
         >
           Save
         </button>

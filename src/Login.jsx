@@ -7,10 +7,12 @@ import { ref, get } from "firebase/database";
 function Login({ SetPage, setDoctor }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
   const doctorsRef = ref(database, "doctors");
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoginError("");
     try {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const snapshot = await get(doctorsRef);
@@ -24,6 +26,14 @@ function Login({ SetPage, setDoctor }) {
       SetPage("patient");
       console.log("✅ Logged in as:", userCred.user);
     } catch (error) {
+      if (
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/wrong-password"
+      ) {
+        setLoginError("Incorrect email or password.");
+      } else {
+        setLoginError("Login failed. Please try again.");
+      }
       console.error("❌ Login failed:", error.message);
     }
   };
@@ -52,7 +62,10 @@ function Login({ SetPage, setDoctor }) {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button type="submit">Log in</button>
-          <p className="forgot-password">Forgot password?</p>
+          {loginError && (
+            <div style={{ color: "red", marginTop: "8px" }}>{loginError}</div>
+          )}
+          {/* <p className="forgot-password">Forgot password?</p> */}
         </form>
       </div>
     </div>

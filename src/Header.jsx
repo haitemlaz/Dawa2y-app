@@ -6,11 +6,13 @@ import {
   ref as storageRef,
   getDownloadURL,
 } from "firebase/storage";
+import AddPatient from "./AddPatient";
 
 function Header({ setPatient, setIsSidebar, doctorPic }) {
   const [searchQuery, setsearchQuery] = useState("");
   const [results, setResults] = useState("");
   const [docImgUrl, setDocImgUrl] = useState();
+  const [showAddPatient, setShowAddPatient] = useState(false);
 
   useEffect(() => {
     const storage = getStorage();
@@ -49,41 +51,55 @@ function Header({ setPatient, setIsSidebar, doctorPic }) {
     // return () => unsubscribe();
   }, [searchQuery]);
   return (
-    <header className="header">
-      <img
-        className="header-doctor-img"
-        src={docImgUrl}
-        alt="Doctor"
-        onClick={() => setIsSidebar((state) => !state)}
-      />
-      <input
-        type="text"
-        placeholder="Search for a patient ..."
-        onChange={(e) => setsearchQuery(e.target.value)}
-        value={searchQuery}
-        // onFocus={(e) => setsearchQuery(e.target.value)}
-      />
-      <button className="btn-add-patient">Add Patient</button>
-      {searchQuery && (
-        <div className="SearchResults">
-          {results.length ? (
-            results.map((e, i) => (
-              <PatientSuggestion
-                patient={e}
-                key={i}
-                setPatient={setPatient}
-                setsearchQuery={setsearchQuery}
-              />
-            ))
-          ) : (
-            <div> no results</div>
-          )}
-        </div>
+    <>
+      {" "}
+      <header className="header">
+        <img
+          className="header-doctor-img"
+          src={docImgUrl}
+          alt="Doctor"
+          onClick={() => setIsSidebar((state) => !state)}
+        />
+        <input
+          type="text"
+          placeholder="Search for a patient ..."
+          onChange={(e) => setsearchQuery(e.target.value)}
+          value={searchQuery}
+          // onFocus={(e) => setsearchQuery(e.target.value)}
+        />
+        <button
+          className="btn-add-patient"
+          onClick={() => setShowAddPatient(true)}
+        >
+          Add Patient
+        </button>
+        {searchQuery && (
+          <div className="SearchResults">
+            {results.length ? (
+              results.map((e, i) => (
+                <PatientSuggestion
+                  patient={e}
+                  key={i}
+                  setPatient={setPatient}
+                  setsearchQuery={setsearchQuery}
+                />
+              ))
+            ) : (
+              <div> no results</div>
+            )}
+          </div>
+        )}
+        {searchQuery && (
+          <div className="overlay" onClick={() => setsearchQuery("")}></div>
+        )}{" "}
+      </header>
+      {showAddPatient && (
+        <>
+          <div className="overlay" onClick={() => setShowAddPatient(false)} />
+          <AddPatient onClose={() => setShowAddPatient(false)} />
+        </>
       )}
-      {searchQuery && (
-        <div className="overlay" onClick={() => setsearchQuery("")}></div>
-      )}{" "}
-    </header>
+    </>
   );
 }
 function PatientSuggestion({ patient, setPatient, setsearchQuery }) {
