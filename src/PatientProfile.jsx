@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import AddFile from "./AddFile";
 import aiIcon from "./assets/aiIcon.png";
 import AnalyseFile from "./AnalyseFile";
+import RecipeHistory from "./RecipeHistory";
 
 function PatientProfile({ patient, setPatient }) {
   const {
@@ -18,6 +19,7 @@ function PatientProfile({ patient, setPatient }) {
   const [img, setImg] = useState(null);
   const [isAddFile, setIsAddFile] = useState(false);
   const [fileURL, setFileURL] = useState(null);
+  const [showRecipes, setShowRecipes] = useState(false);
 
   useEffect(() => {
     setImg("");
@@ -78,12 +80,17 @@ function PatientProfile({ patient, setPatient }) {
               <strong>Diseases:</strong>
               {diseases ? diseases.map((item) => `${item}, `) : "none"}
             </p>
+            <p>
+              <strong onClick={() => setShowRecipes((state) => !state)}>
+                Recipe History:
+              </strong>
+            </p>{" "}
             <p className={insurence === 0 ? "unavailable" : "available"}>
               <strong>Insurance:</strong>
               {insurence === 0 ? "Unavailable" : "Available"}
             </p>
             <div>
-              <strong>Files:</strong>{" "}
+              <strong>Files:</strong>
               {files
                 ? files.map((file, idx) => (
                     <span className="patient-file" key={idx}>
@@ -105,25 +112,32 @@ function PatientProfile({ patient, setPatient }) {
               >
                 + Add
               </strong>
-              {isAddFile ? (
-                <AddFile
-                  patient={patient}
-                  setIsAddFile={setIsAddFile}
-                  setPatient={setPatient}
-                />
-              ) : (
-                ""
-              )}
             </div>
           </>
         ) : (
           "No Patient is Selected"
         )}
       </div>
-      {fileURL && (
+      {fileURL && <AnalyseFile fileURL={fileURL} />}
+      {showRecipes && <RecipeHistory patient={patient} />}
+      {isAddFile && (
+        <AddFile
+          patient={patient}
+          setIsAddFile={setIsAddFile}
+          setPatient={setPatient}
+        />
+      )}
+
+      {(fileURL || showRecipes || isAddFile) && (
         <>
-          <AnalyseFile fileURL={fileURL} />
-          <div className="overlay" onClick={() => setFileURL(null)}></div>
+          <div
+            className="overlay"
+            onClick={() => {
+              setFileURL(null);
+              setShowRecipes(false);
+              setIsAddFile(false);
+            }}
+          ></div>
         </>
       )}
     </>
